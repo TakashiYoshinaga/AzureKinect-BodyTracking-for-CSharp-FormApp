@@ -19,7 +19,7 @@ This is a simple sample code of skeleton tracking of Azure Kinect for C# form ap
 6) Search word with <b>azure kinect body tracking</b>. <br>
 7) Select <b>Microsoft.Azure.Kinect.BodyTracking</b> shown in the search result.<br>
 8) Select <b>SkeletonTrackK4A</b> shown in the right side of Nuget tab.<br>
-9) Select <b>version 1.0.0</b> and click <b>Install</b>
+9) Select <b>version 1.0.0</b> and click <b>Install</b><br>
  <img src="https://github.com/TakashiYoshinaga/AzureKinect-BodyTracking-for-CSharp-FormApp/blob/master/image/02.jpg" alt="" width="400"><br>
 
 4) Press <b>Start</b> button after finishing installation.
