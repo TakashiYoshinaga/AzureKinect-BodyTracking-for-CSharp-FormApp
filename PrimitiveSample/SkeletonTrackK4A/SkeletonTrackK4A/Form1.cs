@@ -18,14 +18,16 @@ using System.Numerics;
 namespace SkeletonTrackK4A
 {
     public partial class Form1 : Form
-    {
+    {      
         Device kinect; 
         Tracker bodyTracker;
         Calibration calib;
+        Skeleton skl;
 
-        bool loop = true;      
-        Bitmap colorBitmap;        
-        Vector2[] joints;
+        Bitmap colorBitmap;    
+        const int JOINT_NUM = 32;
+        bool detected = false;
+        bool loop = true;
 
         public Form1()
         {
@@ -57,12 +59,7 @@ namespace SkeletonTrackK4A
                 SensorOrientation = SensorOrientation.Default
             });
 
-            //Initialization of 2D position of each joint.
-            joints = new Vector2[32];
-            for(int i = 0; i < joints.Length; i++)
-            {
-                joints[i] = new Vector2();
-            }
+           
             
         }
        
@@ -106,32 +103,19 @@ namespace SkeletonTrackK4A
                         uint bodyNum = frame.NumberOfBodies;
                         if (bodyNum > 0)
                         {
+                            detected = true;
                             //Using only 0th person even if multiple bodies are recognized.
-                            Skeleton skl = frame.GetBodySkeleton(0);
-                            for(int i = 0; i <joints.Length; i++)
-                            {
-                                //Convert 3D point to 2D point of color image
-                                var point = calib.TransformTo2D(skl.GetJoint(i).Position, CalibrationDeviceType.Depth, CalibrationDeviceType.Color);
-                                if (point != null && skl.GetJoint(i).ConfidenceLevel !=JointConfidenceLevel.Low)
-                                {
-                                    joints[i].X = point.Value.X;
-                                    joints[i].Y = point.Value.Y;
-                                }
-                                else
-                                {
-                                    joints[i].X = -999;
-                                    joints[i].Y = -999;
-                                }
-                            }
+                            skl = frame.GetBodySkeleton(0);                         
+                        }
+                        else
+                        {
+                            detected = false;
                         }
                     }
                     frame.Dispose();
                     //attatching color image of kinect on the picturebox
                     pictureBox1.Image = colorBitmap;
-                    
-                   pictureBox1.Refresh();
-                }
-               
+                }             
                 this.Update();
             }
             //Stop Kinect 
@@ -146,13 +130,17 @@ namespace SkeletonTrackK4A
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            if (!detected) return;
+
             Graphics g = e.Graphics;
-            for (int i = 0; i < joints.Length; i++)
+            for (int i = 0; i < JOINT_NUM; i++)
             {
-                if (joints[i].X != -999)
+                //Convert 3D point to 2D point of color image
+                var point = calib.TransformTo2D(skl.GetJoint(i).Position, CalibrationDeviceType.Depth, CalibrationDeviceType.Color);
+                if (point != null && skl.GetJoint(i).ConfidenceLevel != JointConfidenceLevel.Low)
                 {
-                    g.FillEllipse(Brushes.White, joints[i].X - 8, joints[i].Y - 8, 16, 16);
-                }
+                    g.FillEllipse(Brushes.White, point.Value.X - 8, point.Value.Y - 8, 16, 16);                 
+                }              
             }
         }
     }
