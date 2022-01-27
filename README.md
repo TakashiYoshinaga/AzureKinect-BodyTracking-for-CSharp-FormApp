@@ -3,6 +3,8 @@
 # Azure Kinect Skeleton Tracking for C# Form Application
 This is a simple sample code of skeleton tracking of Azure Kinect for C# form application.<br>
 <br>
+Click image to play the video.
+<br>
 [![](https://img.youtube.com/vi/WVHB0FR52KI/0.jpg)](https://www.youtube.com/watch?v=WVHB0FR52KI)
 
 # Requirements
